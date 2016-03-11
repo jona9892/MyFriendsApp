@@ -6,8 +6,7 @@ import java.util.ArrayList;
  * Created by jona9892 on 09-03-2016.
  */
 public class MockFriend {
-
-
+    
     public ArrayList<Friend> getAll(){
         ArrayList<Friend> friends = new ArrayList<>();
         friends.add(new Friend("Jonathan", 12345678, "Jonathan@sighotel.dk", "Vardevej 30", null));
