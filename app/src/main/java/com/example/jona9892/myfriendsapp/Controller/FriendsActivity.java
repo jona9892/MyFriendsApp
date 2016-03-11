@@ -25,16 +25,17 @@ import java.util.Collection;
 public class FriendsActivity extends Activity {
 
     FriendAdapter friendAdapter;
-    ICrud<Friend> friendLog;
 
     ListView lstFriends;
     Button btnAdd;
 
-    String name;
-    int phoneNumber;
-    String email;
-    String address;
-    String url;
+
+    private ICrud<Friend> friendDb;
+
+    public static String FRIEND_TAG = "fr tag";
+
+    private final int ADD_REQUEST_CODE = 1;
+    private final int EDIT_REQUEST_CODE = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +44,20 @@ public class FriendsActivity extends Activity {
         setUpList();
         setUpButtons();
 
-        friendLog = MockFriend.getInstance();
-        friendAdapter = new FriendAdapter(this, R.layout.friend_cell, (Friend[]) MockFriend.getInstance().readAll().toArray());
+        //----------------Should be recieved from the savedInstanceState-----------
+        friendDb = MockFriend.getInstance();
+
+        //---------------------------------------------------------------------------
+
+        setAdapter();
+
+    }
+
+    /**
+     * sets the adapter, of the list view
+     */
+    private void setAdapter() {
+        friendAdapter = new FriendAdapter(this, R.layout.friend_cell, (ArrayList<Friend>) friendDb.readAll());
         lstFriends.setAdapter(friendAdapter);
     }
 
@@ -86,27 +99,75 @@ public class FriendsActivity extends Activity {
     private void add(){
         //TODO: should send an empty intend to an activity, we should use the start for result
         Intent intent = new Intent();
-        intent.setClass(this, AddFriendActivity.class);
-        startActivity(intent);
+        intent.setClass(this, EditFriendActivity.class);
+        startActivityForResult(intent, ADD_REQUEST_CODE);
+    }
+
+    /**
+     * the method that will be called when the started activity returns
+     * @param requestCode the code of the activity
+     * @param resultCode how the action went
+     * @param data the information
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case ADD_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    addItemToDB((Friend) data.getSerializableExtra(FRIEND_TAG));
+                    setAdapter();
+                }
+                else {
+                    //Find out what to do.
+                }
+                break;
+            case EDIT_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    editItemInDB((Friend) data.getSerializableExtra(FRIEND_TAG));
+                    setAdapter();
+                }
+                else {
+                    //Find out what to do.
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * Edits a friend in the database
+     * @param theFriend the friend to be edited.
+     */
+    private void editItemInDB(Friend theFriend) {
+        friendDb.update(theFriend);
+    }
+
+    /**
+     * Will add a friend to the database.
+     * @param theFriend the friend to be added.
+     */
+    private void addItemToDB(Friend theFriend) {
+        friendDb.add(theFriend);
     }
 
     public void onClick(ListView parent,
                                 View v, int position, long id) {
 
-        Collection col = friendLog.readAll();
-        Friend[] friends = (Friend[]) col.toArray();
-        name = friends[position].getName();
-        phoneNumber = friends[position].getPhoneNumber();
-        email = friends[position].getEmail();
-        address = friends[position].getAddress();
-        url = friends[position].getUrl();
+        ArrayList<Friend> col = (ArrayList<Friend>) friendDb.readAll();
+        String name = col.get(position).getName();
+        int phoneNumber = col.get(position).getPhoneNumber();
+        String email = col.get(position).getEmail();
+        String address = col.get(position).getAddress();
+        String url = col.get(position).getUrl();
 
         Intent intent = new Intent();
         intent.setClass(this, EditFriendActivity.class);
         //TODO: We need the tag to be a constant.
-        intent.putExtra("Friend",friends[position]);
+        intent.putExtra(FRIEND_TAG,col.get(position));
 
-        startActivity(intent);
+        startActivityForResult(intent, EDIT_REQUEST_CODE);
 
     }
 
@@ -117,11 +178,11 @@ public class FriendsActivity extends Activity {
 
     class FriendAdapter extends ArrayAdapter<Friend>
     {
-
-        public FriendAdapter(Context context, int resource, Friend[] friends) {
+        public FriendAdapter(Context context, int resource, ArrayList<Friend> friends) {
             super(context, resource, friends);
         }
 
+        //TODO: we need to fix so that this only adds one.
         @Override
         public View getView(int position, View v, ViewGroup parent) {
             ViewHolder holder;

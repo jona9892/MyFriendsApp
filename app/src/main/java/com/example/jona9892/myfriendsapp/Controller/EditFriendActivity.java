@@ -1,5 +1,6 @@
 package com.example.jona9892.myfriendsapp.Controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class EditFriendActivity extends AppCompatActivity {
 
     int position;
     ActivityType theType;
+    private Friend theFriend;
 
     private enum ActivityType {
         ADD, EDIT
@@ -38,6 +40,11 @@ public class EditFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__edit_);
+
+        //---------------This should be gotten from the savedinstancestate
+        //theType;
+        //theFriend;
+        //------------------------
         getWidgets();
 
         decideType();
@@ -52,6 +59,7 @@ public class EditFriendActivity extends AppCompatActivity {
     private void decideType() {
         if (isEdit()) {
             theType = ActivityType.EDIT;
+            theFriend = (Friend) getIntent().getSerializableExtra(FriendsActivity.FRIEND_TAG);
             setInfo();
         } else {
             theType = ActivityType.ADD;
@@ -63,7 +71,7 @@ public class EditFriendActivity extends AppCompatActivity {
      * @return true if it's to edit.
      */
     private boolean isEdit() {
-        return getIntent().getSerializableExtra("Friend") != null;
+        return getIntent().getSerializableExtra(FriendsActivity.FRIEND_TAG) != null;
     }
 
     /**
@@ -89,11 +97,11 @@ public class EditFriendActivity extends AppCompatActivity {
      */
     private void setInfo() {
         //TODO: this should get the friend that is in the intent instead.
-        txtName.setText(getIntent().getExtras().getString("name"));
-        txtPhone.setText(getIntent().getExtras().getString("number"));
-        txtEmail.setText(getIntent().getExtras().getString("email"));
-        txtAddress.setText(getIntent().getExtras().getString("address"));
-        txtUrl.setText(getIntent().getExtras().getString("url"));
+        txtName.setText(theFriend.getName() != null ? theFriend.getName().toString() : "");
+        txtPhone.setText("" + theFriend.getPhoneNumber());
+        txtEmail.setText(theFriend.getEmail() != null ? theFriend.getEmail().toString() : "");
+        txtAddress.setText(theFriend.getAddress() != null ? theFriend.getAddress().toString() : "" );
+        txtUrl.setText(theFriend.getUrl()!= null ? theFriend.getUrl().toString() : "");
     }
 
     /**
@@ -143,6 +151,7 @@ public class EditFriendActivity extends AppCompatActivity {
      */
     private void cancel() {
         //TODO: since we now use, start for activity, this need to return a CANCEL value or something like that
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
@@ -157,8 +166,12 @@ public class EditFriendActivity extends AppCompatActivity {
         String address = txtAddress.getText().toString();
         String url = txtUrl.getText().toString();
         Friend friend = new Friend(name, number, email, address, url);
-        position = Integer.parseInt(getIntent().getExtras().getString("position"));
-        MockFriend.getInstance().update(friend);
+        //position = Integer.parseInt(getIntent().getExtras().getString("position"));
+
+        Intent intent = new Intent();
+        intent.putExtra(FriendsActivity.FRIEND_TAG,friend);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     /**

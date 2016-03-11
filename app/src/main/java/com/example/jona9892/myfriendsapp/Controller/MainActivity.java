@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //TODO: we need the init to be run, again. this could be solved by doing the start for result.
         init();
         setUpListeners();
     }
