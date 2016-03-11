@@ -1,16 +1,26 @@
 package com.example.jona9892.myfriendsapp.Model.Implement;
 
+import java.io.Serializable;
+
 /**
  * Created by jona9892 on 09-03-2016.
  */
-public class Friend {
+public class Friend implements Serializable{
     private String name;
     private int phoneNumber;
     private String email;
     private String address;
     private String url;
+    private int id;
+    public static int IDENTITY = 1;
+
+    public int getId() {
+        return id;
+    }
 
     public Friend(String name, int phoneNumber, String email, String address, String url){
+        id = IDENTITY++;
+
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;

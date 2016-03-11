@@ -3,7 +3,6 @@ package com.example.jona9892.myfriendsapp.Controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,18 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.jona9892.myfriendsapp.Model.Abstraction.IFriendLog;
+import com.example.jona9892.myfriendsapp.Model.Abstraction.ICrud;
 import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
-import com.example.jona9892.myfriendsapp.Model.Implement.FriendLog;
+import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class FriendsActivity extends Activity {
+
     FriendAdapter friendAdapter;
-    IFriendLog friendLog;
+    ICrud<Friend> friendLog;
 
     ListView lstFriends;
     Button btnAdd;
@@ -43,15 +43,22 @@ public class FriendsActivity extends Activity {
         setUpList();
         setUpButtons();
 
-        friendLog = FriendLog.getInstance();
-        friendAdapter = new FriendAdapter(this, R.layout.friend_cell, friendLog.getAll());
+        friendLog = MockFriend.getInstance();
+        friendAdapter = new FriendAdapter(this, R.layout.friend_cell, (Friend[]) MockFriend.getInstance().readAll().toArray());
         lstFriends.setAdapter(friendAdapter);
     }
 
+    /**
+     * Gets all the widget.
+     */
     private void getWidgets(){
         lstFriends = (ListView)findViewById(R.id.lstFriends);
         btnAdd = (Button)findViewById(R.id.btnAdd);
     }
+
+    /**
+     * sets up the list.
+     */
     private void setUpList(){
         lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -61,6 +68,9 @@ public class FriendsActivity extends Activity {
         });
     }
 
+    /**
+     * sets up the buttons.
+     */
     private void setUpButtons(){
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +80,11 @@ public class FriendsActivity extends Activity {
         });
     }
 
+    /**
+     * This will open an activity, to add a friend
+     */
     private void add(){
+        //TODO: should send an empty intend to an activity, we should use the start for result
         Intent intent = new Intent();
         intent.setClass(this, AddFriendActivity.class);
         startActivity(intent);
@@ -78,37 +92,23 @@ public class FriendsActivity extends Activity {
 
     public void onClick(ListView parent,
                                 View v, int position, long id) {
-        Toast.makeText(this, friendLog.getAll().get(position).getName() + "is clicked!!",
-                Toast.LENGTH_LONG).show();
 
-        name = friendLog.getAll().get(position).getName();
-        phoneNumber = friendLog.getAll().get(position).getPhoneNumber();
-        email = friendLog.getAll().get(position).getEmail();
-        address = friendLog.getAll().get(position).getAddress();
-        url = friendLog.getAll().get(position).getUrl();
-
-
+        Collection col = friendLog.readAll();
+        Friend[] friends = (Friend[]) col.toArray();
+        name = friends[position].getName();
+        phoneNumber = friends[position].getPhoneNumber();
+        email = friends[position].getEmail();
+        address = friends[position].getAddress();
+        url = friends[position].getUrl();
 
         Intent intent = new Intent();
         intent.setClass(this, EditFriendActivity.class);
-        intent.putExtra("name", name);
-        intent.putExtra("number", String.valueOf(phoneNumber));
-        intent.putExtra("email", email);
-        intent.putExtra("address", address);
-        intent.putExtra("url", url);
-        intent.putExtra("position", position);
+        //TODO: We need the tag to be a constant.
+        intent.putExtra("Friend",friends[position]);
 
         startActivity(intent);
 
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //fa.notifyDataSetChanged();
-    }
-
 
     public static class ViewHolder {
         public TextView name;
@@ -118,7 +118,7 @@ public class FriendsActivity extends Activity {
     class FriendAdapter extends ArrayAdapter<Friend>
     {
 
-        public FriendAdapter(Context context, int resource, ArrayList<Friend> friends) {
+        public FriendAdapter(Context context, int resource, Friend[] friends) {
             super(context, resource, friends);
         }
 

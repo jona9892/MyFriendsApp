@@ -7,9 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.jona9892.myfriendsapp.Model.Abstraction.IFriendLog;
 import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
-import com.example.jona9892.myfriendsapp.Model.Implement.FriendLog;
+import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
 
 public class AddFriendActivity extends AppCompatActivity {
@@ -24,15 +23,12 @@ public class AddFriendActivity extends AppCompatActivity {
 
     private final String TAG = "HistoryActivity";
 
-    IFriendLog friendLog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__edit_);
         getWidgets();
         setUpButtons();
-
-        friendLog = FriendLog.getInstance();
     }
 
     private void getWidgets(){
@@ -75,7 +71,7 @@ public class AddFriendActivity extends AppCompatActivity {
 
         Friend friend = new Friend(name, number, email, address, url);
 
-        friendLog.add(friend);
-        Log.d(TAG, String.valueOf(friendLog.getAll().size()));
+        MockFriend.getInstance().add(friend);
+        Log.d(TAG, String.valueOf(MockFriend.getInstance().readAll().size()));
     }
 }
