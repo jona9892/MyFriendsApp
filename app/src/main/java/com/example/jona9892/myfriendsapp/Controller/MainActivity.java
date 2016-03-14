@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
 import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
 
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtAmount;
     //-------------------------
 
+    private final int FRIEND_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +27,22 @@ public class MainActivity extends AppCompatActivity {
         //TODO: we need the init to be run, again. this could be solved by doing the start for result.
         init();
         setUpListeners();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case FRIEND_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    init();
+                }
+                else {
+                    //Find out what to do.
+                }
+                break;
+
+        }
     }
 
     /**
@@ -54,6 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private void seeFriends(){
         Intent intent = new Intent();
         intent.setClass(this, FriendsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, FRIEND_REQUEST_CODE);
     }
 }
