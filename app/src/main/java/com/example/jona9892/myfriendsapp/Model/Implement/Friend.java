@@ -18,6 +18,7 @@ public class Friend implements Serializable{
         return id;
     }
 
+    //TODO: Needs a location property.
     public Friend(String name, int phoneNumber, String email, String address, String url){
         id = IDENTITY++;
 
