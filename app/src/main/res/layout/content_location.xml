@@ -96,10 +96,8 @@
             <fragment
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:name="android.support.v7.app.AppCompatDialogFragment"
-                android:id="@+id/frgMap"
-                android:layout_gravity="center_horizontal"
-                tools:layout="@layout/abc_action_bar_title_item" />
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:id="@+id/frgMap" />
 
         </RelativeLayout>
 
