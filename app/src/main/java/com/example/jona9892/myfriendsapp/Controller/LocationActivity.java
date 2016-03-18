@@ -40,14 +40,14 @@ public class LocationActivity extends AppCompatActivity {
     private void setUpLabels() {
         //---------------sets up current------------------
         LatLng location = Config.getInstance().getHome();
-        if(location != null)
-            lblCurrentResult.setText(String.format("%d : %d", location.latitude, location.longitude));
+        //if(location != null)
+            //lblCurrentResult.setText(String.format("%d : %d", location.latitude, location.longitude));
         //------------------------------------------------
 
         //---------------sets up destination--------------
         LatLng friendHome = theFriend.getHome();
-        if(friendHome != null)
-            lblDestinationResult.setText(String.format("%d : %d", friendHome.latitude, friendHome.longitude));
+        //if(friendHome != null)
+            //lblDestinationResult.setText(String.format("%d : %d", friendHome.latitude, friendHome.longitude));
         //------------------------------------------------
     }
 
