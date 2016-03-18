@@ -50,6 +50,8 @@ public class FriendsActivity extends Activity {
         //---------------------------------------------------------------------------
 
         setAdapter();
+        back();
+
 
     }
 
@@ -59,6 +61,13 @@ public class FriendsActivity extends Activity {
     private void setAdapter() {
         friendAdapter = new FriendAdapter(this, R.layout.friend_cell, (ArrayList<Friend>) friendDb.readAll());
         lstFriends.setAdapter(friendAdapter);
+    }
+
+    /**
+     * When going back to mainActivity, will set the Result to ok
+     */
+    private void back(){
+        setResult(RESULT_OK);
     }
 
     /**
@@ -77,6 +86,7 @@ public class FriendsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 onClick((ListView) parent, view, position, id);
+
             }
         });
     }
