@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +24,7 @@ import com.example.jona9892.myfriendsapp.R;
 import java.io.File;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EditFriendActivity extends AppCompatActivity {
@@ -38,12 +42,24 @@ public class EditFriendActivity extends AppCompatActivity {
     Button btnSMS;
     Button btnEmail;
     Button btnHomePage;
+    Button btnLocation;
 
     int position;
     ActivityType theType;
     private Friend theFriend;
 
+
+    File file;
+    String fileName;
+
+    private enum MediaType { IMAGE}
+
     private final int CAMERA_REQUEST_CODE = 0;
+    private final int FRRIEND_REQUEST_CODE = 1;
+
+    public static String FRIEND_LOCATION = "friend_location";
+
+    public static String TAG = "edit fr tag";
 
     private enum ActivityType {
         ADD, EDIT
@@ -70,6 +86,15 @@ public class EditFriendActivity extends AppCompatActivity {
     //TODO: we need to send a friend to the location activity.
 
     /**
+     * Opens a new activity for result to the friend location
+     */
+    private void friendLocation(){
+        Intent intent = new Intent(this,LocationActivity.class);
+        intent.putExtra(FRIEND_LOCATION,theFriend);
+        startActivityForResult(intent, FRRIEND_REQUEST_CODE);
+    }
+
+    /**
      * sets up the imagepicture
      */
     private void setUpImgPicture() {
@@ -85,47 +110,84 @@ public class EditFriendActivity extends AppCompatActivity {
      * starts an intent, to start the picture.
      */
     private void updatePicture() {
-        String imagePath;
 
-        imagePath = Environment.getExternalStorageState() + "/images/myimage.jpg";
-        File file = new File( imagePath );
-        Uri outputFileUri = Uri.fromFile( file );
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra( MediaStore.EXTRA_OUTPUT, outputFileUri );
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+        file = getOutputPhotoFile(MediaType.IMAGE);
+        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+
+        startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
     }
 
-    private File getOutputPhotoFile() {
-        File directory = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), getPackageName());
-        if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                Log.e("PICTURE", "Failed to create storage directory.");
+    /**
+     * This will get file from the picture, and set the file info
+     * @param image sets the media type to image
+     * @return the file
+     */
+    private File getOutputPhotoFile(MediaType image) {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+
+        if (!mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d(TAG,"failed to create directory");
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss").format(new Date());
-        return new File(directory.getPath() + File.separator + "IMG_"
-                + timeStamp + ".jpg");
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String postfix = image == MediaType.IMAGE ? "jpg" : "mp4";
+        String prefix = image == MediaType.IMAGE ? "IMG" : "VID";
+
+        File mediaFile = new File(mediaStorageDir.getPath() +
+                File.separator + prefix +
+                "_"+ timeStamp + "." + postfix);
+
+        return mediaFile;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if(resultCode == RESULT_OK){
+            fileName = file.toString();
+            theFriend.setFilePath(fileName);
+            showPictureTaken(theFriend.getFilePath(), imgPicture);
 
-            Uri photoUri = data.getData();
-            File file = new File(photoUri.toString());
             if(!file.exists()){
                 Log.d("PICTURE", "THE FILE DOESN'T EXIST");
             }
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            imgPicture.setImageBitmap(bitmap);
         }
 
+    }
+
+    /**
+     * This will show the picture taken in a imageview
+     * @param filename thie filename of the picture
+     * @param myImage the imageview that the picture should be shown in
+     */
+    private void showPictureTaken(String filename, ImageView myImage) {
+
+        File f = new File(filename);
+        if (!f.exists()) {
+            return;
+        }
+        myImage.setImageURI(Uri.fromFile(f));
+        myImage.setRotation(270);
+        myImage.setBackgroundColor(Color.BLACK);
+        scaleImage(myImage);
+    }
+
+    /**
+     * This will scale the image
+     */
+    private void scaleImage(ImageView myImage)
+    {
+        final Display display = getWindowManager().getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        myImage.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
     /**
@@ -166,6 +228,7 @@ public class EditFriendActivity extends AppCompatActivity {
         btnSMS = (Button) findViewById(R.id.btnSMS);
         btnEmail = (Button) findViewById(R.id.btnEmail);
         btnHomePage = (Button) findViewById(R.id.btnHomepage);
+        btnLocation = (Button) findViewById(R.id.btnLocation);
     }
 
     /**
@@ -178,6 +241,7 @@ public class EditFriendActivity extends AppCompatActivity {
         txtEmail.setText(theFriend.getEmail() != null ? theFriend.getEmail().toString() : "");
         txtAddress.setText(theFriend.getAddress() != null ? theFriend.getAddress().toString() : "" );
         txtUrl.setText(theFriend.getUrl()!= null ? theFriend.getUrl().toString() : "");
+        showPictureTaken(theFriend.getFilePath() != null ? theFriend.getFilePath(): "", imgPicture);
     }
 
     /**
@@ -220,6 +284,13 @@ public class EditFriendActivity extends AppCompatActivity {
                 openHomePage();
             }
         });
+        btnLocation.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                friendLocation();
+            }
+        });
     }
 
     /**
@@ -241,8 +312,7 @@ public class EditFriendActivity extends AppCompatActivity {
         String email = txtEmail.getText().toString();
         String address = txtAddress.getText().toString();
         String url = txtUrl.getText().toString();
-        Friend friend = new Friend(name, number, email, address, url);
-        //position = Integer.parseInt(getIntent().getExtras().getString("position"));
+        Friend friend = new Friend(name, number, email, address, url, fileName);
 
         Intent intent = new Intent();
         intent.putExtra(FriendsActivity.FRIEND_TAG,friend);

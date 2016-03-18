@@ -3,14 +3,20 @@ package com.example.jona9892.myfriendsapp.Controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,16 +25,16 @@ import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
 import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class FriendsActivity extends Activity {
+public class FriendsActivity extends AppCompatActivity {
 
     FriendAdapter friendAdapter;
 
     ListView lstFriends;
     Button btnAdd;
-
 
     private ICrud<Friend> friendDb;
 
@@ -51,8 +57,6 @@ public class FriendsActivity extends Activity {
 
         setAdapter();
         back();
-
-
     }
 
     /**
@@ -166,16 +170,16 @@ public class FriendsActivity extends Activity {
                                 View v, int position, long id) {
 
         ArrayList<Friend> col = (ArrayList<Friend>) friendDb.readAll();
-        String name = col.get(position).getName();
+        /*String name = col.get(position).getName();
         int phoneNumber = col.get(position).getPhoneNumber();
         String email = col.get(position).getEmail();
         String address = col.get(position).getAddress();
-        String url = col.get(position).getUrl();
+        String url = col.get(position).getUrl();*/
 
         Intent intent = new Intent();
         intent.setClass(this, EditFriendActivity.class);
         //TODO: We need the tag to be a constant.
-        intent.putExtra(FRIEND_TAG,col.get(position));
+        intent.putExtra(FRIEND_TAG, col.get(position));
 
         startActivityForResult(intent, EDIT_REQUEST_CODE);
 
@@ -183,6 +187,8 @@ public class FriendsActivity extends Activity {
 
     public static class ViewHolder {
         public TextView name;
+        public TextView phoneNumber;
+        public ImageView imgFriend;
 
     }
 
@@ -190,6 +196,27 @@ public class FriendsActivity extends Activity {
     {
         public FriendAdapter(Context context, int resource, ArrayList<Friend> friends) {
             super(context, resource, friends);
+        }
+
+        private void showPictureTaken(String filename, ImageView myImage) {
+
+            File f = new File(filename);
+            if (!f.exists()) {
+                return;
+            }
+            myImage.setImageURI(Uri.fromFile(f));
+            myImage.setRotation(270);
+            myImage.setBackgroundColor(Color.BLACK);
+            scaleImage(myImage);
+        }
+
+        //This will scale the image
+        private void scaleImage(ImageView myImage)
+        {
+            final Display display = getWindowManager().getDefaultDisplay();
+            Point p = new Point();
+            display.getSize(p);
+            myImage.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
         //TODO: we need to fix so that this only adds one.
@@ -204,6 +231,8 @@ public class FriendsActivity extends Activity {
 
                 holder = new ViewHolder();
                 holder.name = (TextView) v.findViewById(R.id.txtName);
+                holder.phoneNumber = (TextView)v.findViewById(R.id.txtPhoneNumber);
+                holder.imgFriend = (ImageView)v.findViewById(R.id.imgFriend);
                 v.setTag(holder);
 
             }
@@ -214,7 +243,9 @@ public class FriendsActivity extends Activity {
             v.setMinimumHeight(150);
 
             Friend friend = getItem(position);
-            holder.name.setText(friend.getName());
+            holder.name.setText(" "+friend.getName());
+            holder.phoneNumber.setText(""+ " "+friend.getPhoneNumber());
+            showPictureTaken(friend.getFilePath()!= null ? friend.getFilePath(): "", holder.imgFriend);
 
             return v;
         }

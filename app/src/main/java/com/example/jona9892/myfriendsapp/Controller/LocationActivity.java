@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.jona9892.myfriendsapp.Model.Config;
+import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
 import com.example.jona9892.myfriendsapp.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,6 +19,7 @@ public class LocationActivity extends AppCompatActivity {
     LatLng xom;
     private Button btnBack;
     private TextView lblDestinationResult, lblCurrentResult,lblDistanceResult;
+    private Friend theFriend;
 
     //TODO: we need to be able to set the location of the friend.
 
@@ -27,6 +30,25 @@ public class LocationActivity extends AppCompatActivity {
 
         getWidgets();
         setUpButtons();
+        extrasFromIntent();
+        setUpLabels();
+    }
+
+    /**
+     * sets up the labels
+     */
+    private void setUpLabels() {
+        //---------------sets up current------------------
+        LatLng location = Config.getInstance().getHome();
+        if(location != null)
+            lblCurrentResult.setText(String.format("%d : %d", location.latitude, location.longitude));
+        //------------------------------------------------
+
+        //---------------sets up destination--------------
+        LatLng friendHome = theFriend.getHome();
+        if(friendHome != null)
+            lblDestinationResult.setText(String.format("%d : %d", friendHome.latitude, friendHome.longitude));
+        //------------------------------------------------
     }
 
     /**
@@ -64,4 +86,10 @@ public class LocationActivity extends AppCompatActivity {
         //---------------------------------------------
     }
 
+    /**
+     * gets the extras from intent
+     */
+    public void extrasFromIntent() {
+        theFriend = (Friend) getIntent().getSerializableExtra(EditFriendActivity.FRIEND_LOCATION);
+    }
 }
