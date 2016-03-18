@@ -18,7 +18,8 @@ public class Friend implements Serializable{
     public int getId() {
         return id;
     }
-
+    
+    //TODO: Needs a location property.
     public Friend(String name, int phoneNumber, String email, String address, String url, String filePath){
         id = IDENTITY++;
 
@@ -29,7 +30,6 @@ public class Friend implements Serializable{
         this.url = url;
         this.filePath = filePath;
     }
-
 
     public String getName() {
         return name;

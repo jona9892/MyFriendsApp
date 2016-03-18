@@ -78,6 +78,8 @@ public class EditFriendActivity extends AppCompatActivity {
 
     }
 
+    //TODO: we need to send a friend to the location activity.
+
     /**
      * sets up the imagepicture
      */
