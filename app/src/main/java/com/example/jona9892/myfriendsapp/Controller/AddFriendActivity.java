@@ -69,9 +69,9 @@ public class AddFriendActivity extends AppCompatActivity {
         String address = txtAddress.getText().toString();
         String url = txtUrl.getText().toString();
 
-        Friend friend = new Friend(name, number, email, address, url);
+        //Friend friend = new Friend(name, number, email, address, url);
 
-        MockFriend.getInstance().add(friend);
+        //MockFriend.getInstance().add(friend);
         Log.d(TAG, String.valueOf(MockFriend.getInstance().readAll().size()));
     }
 }

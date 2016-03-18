@@ -114,7 +114,8 @@
         android:id="@+id/imgPicture"
         android:layout_below="@+id/btnEmail"
         android:layout_toRightOf="@+id/btnSMS"
-        android:layout_toEndOf="@+id/btnSMS" />
+        android:layout_toEndOf="@+id/btnSMS"
+        android:background="@drawable/image"/>
 
     <Button
         android:layout_width="wrap_content"
