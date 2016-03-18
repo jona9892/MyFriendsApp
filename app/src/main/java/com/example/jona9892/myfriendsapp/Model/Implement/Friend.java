@@ -13,12 +13,13 @@ public class Friend implements Serializable{
     private String url;
     private int id;
     public static int IDENTITY = 1;
+    private String filePath;
 
     public int getId() {
         return id;
     }
 
-    public Friend(String name, int phoneNumber, String email, String address, String url){
+    public Friend(String name, int phoneNumber, String email, String address, String url, String filePath){
         id = IDENTITY++;
 
         this.name = name;
@@ -26,7 +27,9 @@ public class Friend implements Serializable{
         this.email = email;
         this.address = address;
         this.url = url;
+        this.filePath = filePath;
     }
+
 
     public String getName() {
         return name;
@@ -66,5 +69,13 @@ public class Friend implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

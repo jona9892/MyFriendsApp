@@ -22,13 +22,11 @@ public class MockFriend implements ICrud<Friend>{
 
     private MockFriend(){
         friends= new HashMap<>();
-        friends.put(Friend.IDENTITY, new Friend("Jonathan", 12345678, "Jonathan@sighotel.dk", "Vardevej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("Shaun", 12345678, "Shaun@sighotel.dk", "Shaunvej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("Wardrylace", 12345678, "Wardrylace@sighotel.dk", "Vardevej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("cool", 12345678, "Jonathan@sighotel.dk", "Vardevej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("nice", 12345678, "Shaun@sighotel.dk", "Shaunvej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("sassrylace", 12345678, "Wardrylace@sighotel.dk", "Vardevej 30", null));
-        friends.put(Friend.IDENTITY, new Friend("Far", 41289200, "Knude@sighotel.dk", "Vardevej 30", "Google.com"));
+        friends.put(Friend.IDENTITY, new Friend("Jonathan", 41289203, "Jonathangjoel@hotmail.dk", "Lerpøtparken 12", null, null));
+        friends.put(Friend.IDENTITY, new Friend("Max", 12345678, "max@hotmail.dk", "I dont know", null, null));
+        friends.put(Friend.IDENTITY, new Friend("Søren", 12345678, "Søren@hotmail.dk", "stupidvej 30", null,null));
+        friends.put(Friend.IDENTITY, new Friend("Mads", 12345678, "Mads@hotmail.dk", "wuut 30", null, null));
+        friends.put(Friend.IDENTITY, new Friend("Ole", 12345678, "Ole@hotmail.dk", "Shaunvej 30", null,null));
     }
 
     @Override
