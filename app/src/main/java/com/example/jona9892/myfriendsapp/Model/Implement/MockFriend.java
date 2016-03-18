@@ -44,7 +44,12 @@ public class MockFriend implements ICrud<Friend>{
 
     @Override
     public Collection<Friend> readAll() {
-        return friends.values();
+        ArrayList<Friend> result = new ArrayList<>();
+        for(Integer id : friends.keySet()){
+            result.add(friends.get(id));
+        }
+
+        return result;
     }
 
     @Override
