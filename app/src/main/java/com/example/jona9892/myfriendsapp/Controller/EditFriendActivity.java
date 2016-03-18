@@ -2,16 +2,26 @@ package com.example.jona9892.myfriendsapp.Controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
-import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
+
+import java.io.File;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EditFriendActivity extends AppCompatActivity {
     //-----------Views----------
@@ -20,6 +30,7 @@ public class EditFriendActivity extends AppCompatActivity {
     EditText txtEmail;
     EditText txtAddress;
     EditText txtUrl;
+    ImageView imgPicture;
     //---------Buttons--------
     Button btnCancel;
     Button btnSave;
@@ -31,6 +42,8 @@ public class EditFriendActivity extends AppCompatActivity {
     int position;
     ActivityType theType;
     private Friend theFriend;
+
+    private final int CAMERA_REQUEST_CODE = 0;
 
     private enum ActivityType {
         ADD, EDIT
@@ -46,10 +59,70 @@ public class EditFriendActivity extends AppCompatActivity {
         //theFriend;
         //------------------------
         getWidgets();
+        setUpImgPicture();
 
         decideType();
 
         setUpButtons();
+
+    }
+
+    /**
+     * sets up the imagepicture
+     */
+    private void setUpImgPicture() {
+        imgPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatePicture();
+            }
+        });
+    }
+
+    /**
+     * starts an intent, to start the picture.
+     */
+    private void updatePicture() {
+        String imagePath;
+
+        imagePath = Environment.getExternalStorageState() + "/images/myimage.jpg";
+        File file = new File( imagePath );
+        Uri outputFileUri = Uri.fromFile( file );
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra( MediaStore.EXTRA_OUTPUT, outputFileUri );
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+    }
+
+    private File getOutputPhotoFile() {
+        File directory = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getPackageName());
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                Log.e("PICTURE", "Failed to create storage directory.");
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss").format(new Date());
+        return new File(directory.getPath() + File.separator + "IMG_"
+                + timeStamp + ".jpg");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if(resultCode == RESULT_OK){
+
+            Uri photoUri = data.getData();
+            File file = new File(photoUri.toString());
+            if(!file.exists()){
+                Log.d("PICTURE", "THE FILE DOESN'T EXIST");
+            }
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            imgPicture.setImageBitmap(bitmap);
+        }
 
     }
 
@@ -83,6 +156,7 @@ public class EditFriendActivity extends AppCompatActivity {
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtAddress = (EditText) findViewById(R.id.txtAddress);
         txtUrl = (EditText) findViewById(R.id.txtUrl);
+        imgPicture = (ImageView) findViewById(R.id.imgPicture);
 
         btnCancel = (Button) findViewById(R.id.btnCancel);
         btnSave = (Button) findViewById(R.id.btnSave);

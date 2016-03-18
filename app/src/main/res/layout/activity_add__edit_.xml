@@ -105,5 +105,15 @@
         android:text="Homepage"
         android:id="@+id/btnHomepage"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imgPicture"
+        android:layout_below="@+id/btnEmail"
+        android:layout_toRightOf="@+id/btnSMS"
+        android:layout_toEndOf="@+id/btnSMS" />
+
 </RelativeLayout>
