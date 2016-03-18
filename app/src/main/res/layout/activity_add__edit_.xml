@@ -116,4 +116,12 @@
         android:layout_toRightOf="@+id/btnSMS"
         android:layout_toEndOf="@+id/btnSMS" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:id="@+id/btnLocation"
+        android:layout_alignTop="@+id/btnSave"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

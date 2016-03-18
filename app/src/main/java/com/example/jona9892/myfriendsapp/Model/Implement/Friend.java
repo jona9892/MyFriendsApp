@@ -1,5 +1,7 @@
 package com.example.jona9892.myfriendsapp.Model.Implement;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
 /**
@@ -12,13 +14,13 @@ public class Friend implements Serializable{
     private String address;
     private String url;
     private int id;
+    private LatLng home;
     public static int IDENTITY = 1;
 
     public int getId() {
         return id;
     }
 
-    //TODO: Needs a location property.
     public Friend(String name, int phoneNumber, String email, String address, String url){
         id = IDENTITY++;
 
@@ -27,6 +29,14 @@ public class Friend implements Serializable{
         this.email = email;
         this.address = address;
         this.url = url;
+    }
+
+    public LatLng getHome() {
+        return home;
+    }
+
+    public void setHome(LatLng home) {
+        this.home = home;
     }
 
     public String getName() {

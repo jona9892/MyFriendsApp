@@ -38,12 +38,16 @@ public class EditFriendActivity extends AppCompatActivity {
     Button btnSMS;
     Button btnEmail;
     Button btnHomePage;
+    Button btnLocation;
 
     int position;
     ActivityType theType;
     private Friend theFriend;
 
     private final int CAMERA_REQUEST_CODE = 0;
+    private final int FRRIEND_REQUEST_CODE = 1;
+
+    public static String FRIEND_LOCATION = "friend_location";
 
     private enum ActivityType {
         ADD, EDIT
@@ -68,6 +72,15 @@ public class EditFriendActivity extends AppCompatActivity {
     }
 
     //TODO: we need to send a friend to the location activity.
+
+    /**
+     * Opens a new activity for result to the friend location
+     */
+    private void friendLocation(){
+        Intent intent = new Intent(this,LocationActivity.class);
+        intent.putExtra(FRIEND_LOCATION,theFriend);
+        startActivityForResult(intent, FRRIEND_REQUEST_CODE);
+    }
 
     /**
      * sets up the imagepicture
@@ -113,7 +126,6 @@ public class EditFriendActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if(resultCode == RESULT_OK){
 
@@ -166,6 +178,7 @@ public class EditFriendActivity extends AppCompatActivity {
         btnSMS = (Button) findViewById(R.id.btnSMS);
         btnEmail = (Button) findViewById(R.id.btnEmail);
         btnHomePage = (Button) findViewById(R.id.btnHomepage);
+        btnLocation = (Button) findViewById(R.id.btnLocation);
     }
 
     /**
@@ -176,8 +189,8 @@ public class EditFriendActivity extends AppCompatActivity {
         txtName.setText(theFriend.getName() != null ? theFriend.getName().toString() : "");
         txtPhone.setText("" + theFriend.getPhoneNumber());
         txtEmail.setText(theFriend.getEmail() != null ? theFriend.getEmail().toString() : "");
-        txtAddress.setText(theFriend.getAddress() != null ? theFriend.getAddress().toString() : "" );
-        txtUrl.setText(theFriend.getUrl()!= null ? theFriend.getUrl().toString() : "");
+        txtAddress.setText(theFriend.getAddress() != null ? theFriend.getAddress().toString() : "");
+        txtUrl.setText(theFriend.getUrl() != null ? theFriend.getUrl().toString() : "");
     }
 
     /**
@@ -218,6 +231,13 @@ public class EditFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openHomePage();
+            }
+        });
+        btnLocation.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                friendLocation();
             }
         });
     }
