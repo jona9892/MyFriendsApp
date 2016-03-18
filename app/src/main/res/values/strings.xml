@@ -3,4 +3,5 @@
     <string name="txt_Friends">Friends: </string>
     <string name="btn_View">View</string>
     <string name="img_picture">An image</string>
+    <string name="title_activity_location">LocationActivity</string>
 </resources>
