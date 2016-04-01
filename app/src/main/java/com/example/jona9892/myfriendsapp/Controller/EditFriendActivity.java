@@ -312,7 +312,7 @@ public class EditFriendActivity extends AppCompatActivity {
         String email = txtEmail.getText().toString();
         String address = txtAddress.getText().toString();
         String url = txtUrl.getText().toString();
-        Friend friend = new Friend(name, number, email, address, url, fileName);
+        Friend friend = new Friend(theFriend == null ? 0: theFriend.getId(),name, number, email, address, url, fileName == null ? "":fileName);
 
         Intent intent = new Intent();
         intent.putExtra(FriendsActivity.FRIEND_TAG,friend);

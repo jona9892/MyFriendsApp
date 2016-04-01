@@ -1,6 +1,5 @@
 package com.example.jona9892.myfriendsapp.Controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,14 +19,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.jona9892.myfriendsapp.Model.Abstraction.ICrud;
+import com.example.jona9892.myfriendsapp.DALC.Abstraction.ICrud;
+import com.example.jona9892.myfriendsapp.DALC.Implementation.DALCFriend;
 import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
 import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -51,7 +50,7 @@ public class FriendsActivity extends AppCompatActivity {
         setUpButtons();
 
         //----------------Should be recieved from the savedInstanceState-----------
-        friendDb = MockFriend.getInstance();
+        friendDb = new DALCFriend(this);
 
         //---------------------------------------------------------------------------
 

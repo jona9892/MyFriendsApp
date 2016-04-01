@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.jona9892.myfriendsapp.DALC.Implementation.DALCFriend;
 import com.example.jona9892.myfriendsapp.Model.Implement.Friend;
 import com.example.jona9892.myfriendsapp.Model.Implement.MockFriend;
 import com.example.jona9892.myfriendsapp.R;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         btnView = (Button)findViewById(R.id.btnView);
         txtAmount = (TextView)findViewById(R.id.txtAmount);
 
-        txtAmount.setText("" + MockFriend.getInstance().readAll().size());
+        txtAmount.setText("" + new DALCFriend(this).readAll().size());
     }
 
     /**

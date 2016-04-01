@@ -8,29 +8,32 @@ import java.io.Serializable;
  * Created by jona9892 on 09-03-2016.
  */
 public class Friend implements Serializable{
-    private String name;
-    private int phoneNumber;
-    private String email;
-    private String address;
-    private String url;
-    private int id;
+    private String name ="";
+    private int phoneNumber =0;
+    private String email ="";
+    private String address ="";
+    private String url ="";
+    private int id =0;
     private LatLng home;
     public static int IDENTITY = 1;
-    private String filePath;
+    private String filePath ="";
 
     public int getId() {
         return id;
     }
     
-    public Friend(String name, int phoneNumber, String email, String address, String url, String filePath){
-        id = IDENTITY++;
+    public Friend(int id, String name, int phoneNumber, String email, String address, String url, String filePath){
 
+        this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
         this.url = url;
         this.filePath = filePath;
+    }
+    public void setId(int id){
+        this.id=id;
     }
 
     public LatLng getHome() {

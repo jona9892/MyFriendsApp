@@ -1,4 +1,4 @@
-package com.example.jona9892.myfriendsapp.Model.Abstraction;
+package com.example.jona9892.myfriendsapp.DALC.Abstraction;
 
 import java.io.Serializable;
 import java.util.Collection;
