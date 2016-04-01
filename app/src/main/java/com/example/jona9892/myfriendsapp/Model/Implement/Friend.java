@@ -21,6 +21,9 @@ public class Friend implements Serializable{
     public int getId() {
         return id;
     }
+    public Friend(){
+
+    }
     
     public Friend(int id, String name, int phoneNumber, String email, String address, String url, String filePath){
 

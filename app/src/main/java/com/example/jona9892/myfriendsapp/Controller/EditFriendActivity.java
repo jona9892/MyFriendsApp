@@ -74,6 +74,7 @@ public class EditFriendActivity extends AppCompatActivity {
         //theType;
         //theFriend;
         //------------------------
+        theFriend = new Friend();
         getWidgets();
         setUpImgPicture();
 
@@ -308,7 +309,7 @@ public class EditFriendActivity extends AppCompatActivity {
     private void editFriend() {
         //TODO: make this return an UPDATED INTENT thing
         String name = txtName.getText().toString();
-        int number = Integer.parseInt(txtPhone.getText().toString());
+        int number = txtPhone.getText().length() <1 ? 0:Integer.parseInt(txtPhone.getText().toString());
         String email = txtEmail.getText().toString();
         String address = txtAddress.getText().toString();
         String url = txtUrl.getText().toString();
